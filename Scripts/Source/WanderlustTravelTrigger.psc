@@ -1,10 +1,10 @@
 Scriptname WanderlustTravelTrigger Extends ObjectReference
 
-WanderlustQuest property MainQuest Auto
+WanderlustQuestScript property WanderQuest Auto
 
 Event OnTriggerEnter(ObjectReference akActionRef)
+    Debug.MessageBox(GetName() + " hit by " + akActionRef.GetName())
     If akActionRef == Game.GetPlayer()
-        MainQuest.OnTravelTriggerEnter()
-        self.Disable()
+        WanderQuest.OnTravelTriggerEnter(self as ObjectReference)
     EndIf
 EndEvent

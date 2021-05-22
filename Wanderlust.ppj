@@ -2,7 +2,7 @@
 <PapyrusProject xmlns="PapyrusProject.xsd" Game="tesv" Output="@GameDir\Scripts" Flags="TESV_Papyrus_Flags.flg" Anonymize="true" Optimize="false" Release="false" Final="false" Package="false" Zip="false">
   <Variables>
     <Variable Name="ModName" Value="Wanderlust"/>
-    <Variable Name="GameDir" Value="D:\Games\Steam\steamapps\common\Skyrim\Data"/>
+    <Variable Name="GameDir" Value="C:\Program Files (x86)\Steam\steamapps\common\Skyrim\Data"/>
     <Variable Name="ModDir" Value="."/>
     <Variable Name="SkyUISDKDir" Value="@ModDir\SkyUI_5.1_SDK"/>
   </Variables>
