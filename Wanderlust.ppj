@@ -1,0 +1,35 @@
+<?xml version='1.0'?>
+<PapyrusProject xmlns="PapyrusProject.xsd" Game="tesv" Output="@GameDir\Scripts" Flags="TESV_Papyrus_Flags.flg" Anonymize="true" Optimize="false" Release="false" Final="false" Package="false" Zip="false">
+  <Variables>
+    <Variable Name="ModName" Value="Wanderlust"/>
+    <Variable Name="GameDir" Value="D:\Games\Steam\steamapps\common\Skyrim\Data"/>
+    <Variable Name="ModDir" Value="."/>
+    <Variable Name="SkyUISDKDir" Value="@ModDir\SkyUI_5.1_SDK"/>
+  </Variables>
+  <Imports>
+    <Import>@GameDir\Scripts\Source</Import>
+    <Import>@SkyUISDKDir\Scripts\Source</Import>
+  </Imports>
+  <Folders>
+    <Folder>@ModDir\Scripts\Source</Folder>
+  </Folders>
+  <!-- <Packages Output="@MyProject">
+    <Package Name="@ModName" RootDir="@MyProject">
+      <Include>**/scripts/*.pex</Include>
+      <Include>**/interface/**/*.txt</Include>
+      <Include>**/Strings/*.*</Include>
+    </Package>
+    <Package Name="@ModName - Textures" RootDir="@MyProject">
+      <Include NoRecurse="false">**/*.dds</Include>
+    </Package>
+  </Packages>
+  <ZipFiles Output="@MyProject">
+    <ZipFile Name="@ModName" RootDir="@MyProject" Compression="deflate">
+      <Include NoRecurse="true">*/*.esp</Include>
+      <Include NoRecurse="true">*.bsa</Include>
+    </ZipFile>
+    <ZipFile Name="@ModName - English" RootDir="@MyProject" Compression="deflate">
+      <Include>**/Strings/*.*</Include>
+    </ZipFile>
+  </ZipFiles> -->
+</PapyrusProject>
