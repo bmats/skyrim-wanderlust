@@ -5,26 +5,30 @@ Activator property BaseWaypoint Auto
 WanderlustWaypoint[] property Route Auto
 Quest property PlayerPackageQuest Auto
 
-int _currentIndex = -1
+WanderlustWaypoint _lastWaypoint
+WanderlustWaypoint _currentWaypoint
+; int _currentIndex
 
 ; Called by WanderlustMenu
 function StartWander()
-  _currentIndex = _GetClosestIndex()
+  _currentWaypoint = _GetClosestWaypoint()
+  Debug.MessageBox("Closest " + _currentWaypoint)
 
   ; Disable all the points except for the current
   int i = 0
   while i < Route.Length
-    _SetWaypointEnabled(i, i == _currentIndex)
+    _SetWaypointEnabled(Route[i], Route[i] == _currentWaypoint)
     i += 1
   endWhile
 
   ; Enable AI player package
   PlayerPackageQuest.Start()
 
-  ; Enable AI
+  ; Drive player controls using AI
   Game.SetPlayerAIDriven()
   Game.DisablePlayerControls(false, false, false, false, false, false, false)
   Game.ForceFirstPerson()
+  ; Game.ShowFirstPersonGeometry(false)
 endFunction
 
 function StopWander()
@@ -32,42 +36,41 @@ function StopWander()
   Game.EnablePlayerControls()
   PlayerPackageQuest.Stop()
 
-  _currentIndex = -1
+  _lastWaypoint = None
+  _currentWaypoint = None
 endFunction
 
 function OnWaypointTriggerEnter(WanderlustWaypoint waypoint)
-  if _currentIndex < 0 || waypoint != Route[_currentIndex]
+  if waypoint != _currentWaypoint
     return
   endIf
 
+  Debug.Notification("Reached waypoint")
+
+  ; Disable AI while we swap waypoints
   PlayerPackageQuest.Stop()
-  _SetWaypointEnabled(_currentIndex, false)
 
-  ; Increment index and loop
-  _currentIndex += 1
-  if _currentIndex >= Route.Length
-    _currentIndex = 0
-  endIf
+  ; Find the next waypoint, avoiding the last one if possible
+  WanderlustWaypoint nextWaypoint = _currentWaypoint.GetRandomAdjacentWaypoint(_lastWaypoint)
 
-  ; Enable the next point and start again
-  _SetWaypointEnabled(_currentIndex, true)
+  _lastWaypoint = _currentWaypoint
+  _currentWaypoint = nextWaypoint
+
+  ; Enable the next waypoint and start again
+  _SetWaypointEnabled(_lastWaypoint, false)
+  _SetWaypointEnabled(_currentWaypoint, true)
   PlayerPackageQuest.Start()
 endFunction
 
-function _SetWaypointEnabled(int index, bool isEnabled)
+function _SetWaypointEnabled(WanderlustWaypoint waypoint, bool isEnabled)
   if isEnabled
-    Route[index].Enable()
+    waypoint.Enable()
   else
-    Route[index].Disable()
+    waypoint.Disable()
   endIf
 endFunction
 
-int function _GetClosestIndex()
-  ObjectReference closestWaypoint = Game.FindClosestReferenceOfTypeFromRef(BaseWaypoint, Game.GetPlayer(), 1000000)
-
-  int index = Route.Find(closestWaypoint as WanderlustWaypoint)
-  if index < 0
-    return 0
-  endIf
-  return index
+WanderlustWaypoint function _GetClosestWaypoint()
+  ObjectReference closest = Game.FindClosestReferenceOfTypeFromRef(BaseWaypoint, Game.GetPlayer(), 1000000) ; is this large enough?
+  return closest as WanderlustWaypoint
 endFunction
