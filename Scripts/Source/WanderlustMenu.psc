@@ -11,7 +11,7 @@ EndEvent
 
 State StartWander
     Event OnHighlightST()
-        SetInfoText("Enable AI wandering and start moving towards the closest path node.")
+        SetInfoText("Walk to the closest waypoint and then start wandering.")
     EndEvent
     Event OnSelectST()
         ; Wait until the menu closes
@@ -22,6 +22,9 @@ State StartWander
 EndState
 
 State StopWander
+    Event OnHighlightST()
+        SetInfoText("Stop wandering and enable player controls.")
+    EndEvent
     Event OnSelectST()
         ; Wait until the menu closes
         Utility.Wait(0.1)

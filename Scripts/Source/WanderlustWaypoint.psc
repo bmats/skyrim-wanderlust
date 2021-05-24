@@ -1,9 +1,10 @@
-Scriptname WanderlustTravelTrigger Extends ObjectReference
+Scriptname WanderlustWaypoint Extends ObjectReference
 
 WanderlustQuestScript property WanderQuest Auto
+WanderlustWaypoint[] property Adjacent Auto
 
 Event OnTriggerEnter(ObjectReference akActionRef)
     If akActionRef == Game.GetPlayer()
-        WanderQuest.OnTravelTriggerEnter(self as ObjectReference)
+        WanderQuest.OnWaypointTriggerEnter(self)
     EndIf
 EndEvent
