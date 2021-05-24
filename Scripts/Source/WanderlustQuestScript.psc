@@ -1,14 +1,14 @@
-Scriptname WanderlustQuestScript Extends Quest
+scriptname WanderlustQuestScript extends Quest
 {Main logic for Wanderlust mod.}
 
-Activator Property BaseWaypoint Auto
-WanderlustWaypoint[] Property Route Auto
-Quest Property PlayerPackageQuest Auto
+Activator property BaseWaypoint Auto
+WanderlustWaypoint[] property Route Auto
+Quest property PlayerPackageQuest Auto
 
 int _currentIndex = -1
 
 ; Called by WanderlustMenu
-Function StartWander()
+function StartWander()
   _currentIndex = _GetClosestIndex()
 
   ; Disable all the points except for the current
@@ -25,17 +25,17 @@ Function StartWander()
   Game.SetPlayerAIDriven()
   Game.DisablePlayerControls(false, false, false, false, false, false, false)
   Game.ForceFirstPerson()
-EndFunction
+endFunction
 
-Function StopWander()
+function StopWander()
   Game.SetPlayerAIDriven(false)
   Game.EnablePlayerControls()
   PlayerPackageQuest.Stop()
 
   _currentIndex = -1
-EndFunction
+endFunction
 
-Function OnWaypointTriggerEnter(WanderlustWaypoint waypoint)
+function OnWaypointTriggerEnter(WanderlustWaypoint waypoint)
   if _currentIndex < 0 || waypoint != Route[_currentIndex]
     return
   endIf
@@ -52,17 +52,17 @@ Function OnWaypointTriggerEnter(WanderlustWaypoint waypoint)
   ; Enable the next point and start again
   _SetWaypointEnabled(_currentIndex, true)
   PlayerPackageQuest.Start()
-EndFunction
+endFunction
 
-Function _SetWaypointEnabled(int index, bool isEnabled)
+function _SetWaypointEnabled(int index, bool isEnabled)
   if isEnabled
     Route[index].Enable()
   else
     Route[index].Disable()
   endIf
-EndFunction
+endFunction
 
-int Function _GetClosestIndex()
+int function _GetClosestIndex()
   ObjectReference closestWaypoint = Game.FindClosestReferenceOfTypeFromRef(BaseWaypoint, Game.GetPlayer(), 1000000)
 
   int index = Route.Find(closestWaypoint as WanderlustWaypoint)
@@ -70,4 +70,4 @@ int Function _GetClosestIndex()
     return 0
   endIf
   return index
-EndFunction
+endFunction

@@ -1,34 +1,36 @@
-Scriptname WanderlustMenu Extends SKI_ConfigBase
+scriptname WanderlustMenu extends SKI_ConfigBase
 {Mod Configuration Menu entrypoint for Wanderlust mod.}
 
 WanderlustQuestScript property MainQuest Auto
 
-Event OnPageReset(string page)
+event OnPageReset(string page)
     SetCursorFillMode(TOP_TO_BOTTOM)
     AddTextOptionST("StartWander", "Start Wandering", "")
     AddTextOptionST("StopWander", "Stop Wandering", "")
-EndEvent
+endEvent
 
-State StartWander
-    Event OnHighlightST()
+state StartWander
+    event OnHighlightST()
         SetInfoText("Walk to the closest waypoint and then start wandering.")
-    EndEvent
-    Event OnSelectST()
+    endEvent
+
+    event OnSelectST()
         ; Wait until the menu closes
         Utility.Wait(0.1)
 
         MainQuest.StartWander()
-    EndEvent
-EndState
+    endEvent
+endState
 
-State StopWander
-    Event OnHighlightST()
+state StopWander
+    event OnHighlightST()
         SetInfoText("Stop wandering and enable player controls.")
-    EndEvent
-    Event OnSelectST()
+    endEvent
+
+    event OnSelectST()
         ; Wait until the menu closes
         Utility.Wait(0.1)
 
         MainQuest.StopWander()
-    EndEvent
-EndState
+    endEvent
+endState
