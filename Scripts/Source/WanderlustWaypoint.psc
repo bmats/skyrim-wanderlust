@@ -35,3 +35,7 @@ WanderlustWaypoint function GetRandomAdjacentWaypoint(WanderlustWaypoint avoidIf
     return Adjacent[randomIndex + 1]
   endIf
 endFunction
+
+string function ToString(int waypointIndex)
+  return waypointIndex + " " + self
+endFunction

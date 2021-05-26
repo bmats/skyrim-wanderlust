@@ -3,10 +3,28 @@ scriptname WanderlustMenu extends SKI_ConfigBase
 
 WanderlustQuestScript property MainQuest Auto
 
+bool _manualRouting = false
+
+int _manualRoutingOptionId
+
 event OnPageReset(string page)
   SetCursorFillMode(TOP_TO_BOTTOM)
   AddTextOptionST("StartWander", "Start Wandering", "")
   AddTextOptionST("StopWander", "Stop Wandering", "")
+
+  SetCursorPosition(1)
+
+  _manualRoutingOptionId = AddToggleOption("Manual waypoint routing", _manualRouting)
+endEvent
+
+event OnOptionSelect(int optionId)
+	{Called when the user selects a non-dialog option}
+
+	if (optionId == _manualRoutingOptionId)
+		_manualRouting = !_manualRouting
+    MainQuest.DebugSetManualRouting(_manualRouting)
+		SetToggleOptionValue(_manualRoutingOptionId, _manualRouting)
+	endIf
 endEvent
 
 state StartWander
