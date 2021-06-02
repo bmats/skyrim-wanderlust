@@ -148,7 +148,7 @@ string function _IntToAlphaChar(int v)
   elseIf v == 3
     return "D"
   elseIf v == 4
-    return "E";
+    return "E"
   endIf
 endFunction
 
