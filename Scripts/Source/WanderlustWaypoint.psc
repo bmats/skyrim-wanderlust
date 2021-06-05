@@ -4,7 +4,7 @@ WanderlustQuestScript property WanderQuest Auto
 WanderlustWaypoint[] property Adjacent Auto
 
 event OnTriggerEnter(ObjectReference akActionRef)
-  if akActionRef == Game.GetPlayer()
+  if akActionRef == WanderQuest.GetMainActor()
     WanderQuest.OnWaypointTriggerEnter(self)
   endIf
 endEvent
