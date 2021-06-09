@@ -1,42 +1,48 @@
-https://www.creationkit.com/index.php?title=Quest_Alias_Tab
-http://www.gamesas.com/trying-make-mcm-configeration-menu-t409508.html - MCM states
-
-Parsing esm/esp files:
-https://github.com/uesp/tes5lib
-https://github.com/uesp/skyedit
-https://en.uesp.net/wiki/Skyrim_Mod:SkyEdit/Getting_Started
-https://github.com/TES5Edit/TES5Edit - TES5Dump to dump esm data
-https://github.com/ThreeTen22/skyrim-plugin-decoding-project - research?
-https://github.com/Ortham/esplugin/blob/master/src/subrecord.rs
-
-Todo:
-- increase FOV
-- fix horses blocking the way
-- [05/25/2021 - 11:29:49PM] Error: Property Adjacent on script WanderlustWaypoint attached to  (0B006E88) cannot be initialized because the value is the incorrect type
-- Fix thieves
-- Look in direction of walking
-
 # Wanderlust
+A bot that explores Tamriel on foot.
+
 Supports: Skyrim LE
+
+![Waypoint map](Maps/waypoint-map.jpg)
+
+Install the mod and use the Wanderlust mod configuration menu (esc > Mod Configuration > Wanderlust) to start and stop the wandering mode.
 
 ## Set up
 
+Required mods:
+- [Skyrim Script Extender (SKSE)](https://www.nexusmods.com/skyrim/mods/100216)
+- [SkyUI](https://www.nexusmods.com/skyrim/mods/3863)
+
 Recommended mods:
 - [One With Nature](https://www.nexusmods.com/skyrim/mods/54090): change all animals to not be aggressive
-- [Skyrim Unbound](https://www.nexusmods.com/skyrim/mods/71465/): disable all dragon spawn
+- [No Random Dragons](https://www.nexusmods.com/skyrim/mods/14519/): disable random dragon spawns
+- ~~[Skyrim Unbound](https://www.nexusmods.com/skyrim/mods/71465/): disable all dragon spawn~~
 
 Recommended Skyrim.ini changes (in Documents/My Games/Skyrim):
 ```
 [General]
 bAlwaysActive=1
+fDefaultFov=80
 [Camera]
 fAutoVanityModeDelay=1000000
 ```
 
 Recommended changes to game settings:
 - Disable crosshair
+- Dim HUD so it's less distracting
 
-## Dev set up
+Recommended console cheats:
+```sh
+tgm
+tmm 0 # rediscover every location again
+```
 
-https://github.com/joelday/papyrus-lang/wiki/Papyrus-Project
-https://srmap.uesp.net/
+## Dev environment set up
+
+- VS Code
+- https://github.com/joelday/papyrus-lang/wiki/Papyrus-Project
+
+## Helpful links
+- Detailed Tamriel map: https://srmap.uesp.net/
+- MCM states: http://www.gamesas.com/trying-make-mcm-configeration-menu-t409508.html
+- Creation Kit documentation: https://www.creationkit.com/index.php?title=Quest_Alias_Tab

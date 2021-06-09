@@ -1,0 +1,6 @@
+- slow down walk speed
+- if the player gets stuck for 10 seconds, teleport to destination
+- video stream quality is kinda bad?
+- get rid of dragons altogether - need a specific save?
+- Fix thieves
+- Look in direction of walking
