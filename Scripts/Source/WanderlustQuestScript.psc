@@ -8,48 +8,46 @@ ReferenceAlias property PlayerPackageQuestHorseAlias Auto
 ActorBase property HorseActor Auto
 Message property ManualRoutingMessage Auto
 
-float _kUpdateIntervalSec = 2.0
+float _kUpdateIntervalSec = 5.0
 float _kPlayerFollowDistance = 1000.0
-float _kStuckMoveDistance = 50.0
+float _kStuckDistanceThreshold = 50.0
 
 WanderlustWaypoint _lastWaypoint
 WanderlustWaypoint _currentWaypoint
 bool _manualRouting
 Actor _horsey
-float _lastHorseX
-float _lastHorseY
-float _lastHorseZ
-float _lastPositionX = -999999.9
-float _lastPositionY = -999999.9
-float _lastPositionZ = -999999.9
+float _lastFollowPosX
+float _lastFollowPosY
+float _lastFollowPosZ
+float _lastUpdatePosX = -999999.9
+float _lastUpdatePosY = -999999.9
+float _lastUpdatePosZ = -999999.9
 
 event OnUpdate()
   if _currentWaypoint == None
     return
   endIf
 
+  ; The player actor needs to stay within range of the horse because the world loads around the player position.
+  ; Otherwise, the horse will reach the end of the world.
+  ; Every time the horse moves _kPlayerFollowDistance, move the player there and update the last follow position.
   Actor player = Game.GetPlayer()
-
-  ; Make the player follow the horse at a distance
-  float sqrDistanceFromLastHorsePositionToCurrentActorPosition = _SqrDistance(_horsey.GetPositionX(), _horsey.GetPositionY(), _horsey.GetPositionZ(), _lastHorseX, _lastHorseY, _lastHorseZ)
-  if sqrDistanceFromLastHorsePositionToCurrentActorPosition > (_kPlayerFollowDistance * _kPlayerFollowDistance)
-    player.TranslateTo(_lastHorseX, _lastHorseY, _lastHorseZ, 0, 0, 0, 1000)
-
-    _lastHorseX = _horsey.GetPositionX()
-    _lastHorseY = _horsey.GetPositionY()
-    _lastHorseZ = _horsey.GetPositionZ()
+  float sqrDistanceFromFollowPos = _SqrDistanceToObject(_horsey, _lastFollowPosX, _lastFollowPosY, _lastFollowPosZ)
+  if sqrDistanceFromFollowPos > (_kPlayerFollowDistance * _kPlayerFollowDistance)
+    player.TranslateTo(_lastFollowPosX, _lastFollowPosY, _lastFollowPosZ, 0, 0, 0, 1000)
+    _lastFollowPosX = _horsey.GetPositionX()
+    _lastFollowPosY = _horsey.GetPositionY()
+    _lastFollowPosZ = _horsey.GetPositionZ()
   endIf
 
-  ; if _SqrDistanceToLastPosition(player.GetPositionX(), player.GetPositionY(), player.GetPositionZ()) < (_kStuckMoveDistance * _kStuckMoveDistance)
-  ;   ; Player is possibly stuck
-  ;   _FixPlayer(player)
-  ; endIf
+  if _SqrDistanceToObject(_horsey, _lastUpdatePosX, _lastUpdatePosY, _lastUpdatePosZ) < (_kStuckDistanceThreshold * _kStuckDistanceThreshold)
+    ; Horse is stuck. Just teleport to the next waypoint to fix this
+    _TeleportToNextWaypoint()
+  endIf
 
-  ; _lastPositionX = player.GetPositionX()
-  ; _lastPositionY = player.GetPositionY()
-  ; _lastPositionZ = player.GetPositionZ()
-
-  RegisterForSingleUpdate(_kUpdateIntervalSec)
+  _lastUpdatePosX = _horsey.GetPositionX()
+  _lastUpdatePosY = _horsey.GetPositionY()
+  _lastUpdatePosZ = _horsey.GetPositionZ()
 endEvent
 
 ; Called by WanderlustMenu
@@ -63,40 +61,46 @@ function StartWander()
     i += 1
   endWhile
 
+  ; Spawn a horse at our current position
   _horsey = Game.GetPlayer().PlaceAtMe(HorseActor) as Actor
   PlayerPackageQuestHorseAlias.ForceRefTo(_horsey)
 
-  _lastHorseX = _horsey.GetPositionX()
-  _lastHorseY = _horsey.GetPositionY()
-  _lastHorseZ = _horsey.GetPositionZ()
+  ; Use the starting position as the first follow position
+  _lastFollowPosX = _horsey.GetPositionX()
+  _lastFollowPosY = _horsey.GetPositionY()
+  _lastFollowPosZ = _horsey.GetPositionZ()
 
-  ; Enable AI player package
+  ; Enable AI package
   PlayerPackageQuest.Start()
 
   ; Disable player movement
-  Game.DisablePlayerControls(false, false, false, false, false, false, false)
+  Game.DisablePlayerControls()
 
-  ; Follow the horse in first person (ForceThirdPerson() is a hack to get this to take effect)
+  ; Follow the horse (double function calls is a hack to make SetCameraTarget() take effect)
   Game.SetCameraTarget(_horsey)
   Game.ForceFirstPerson()
   Game.ForceThirdPerson()
 
+  ; Don't hide geometry in debug mode
   if !_manualRouting
     Game.ShowFirstPersonGeometry(false)
     Game.GetPlayer().SetAlpha(0)
   endIf
 
-  RegisterForSingleUpdate(_kUpdateIntervalSec)
+  RegisterForUpdate(_kUpdateIntervalSec)
 endFunction
 
 function StopWander()
+  UnregisterForUpdate()
+
   Actor player = Game.GetPlayer()
-  Game.ShowFirstPersonGeometry(true)
   player.SetAlpha(1)
-  Game.EnablePlayerControls()
+  Game.ShowFirstPersonGeometry(true)
   Game.SetCameraTarget(player)
-  _horsey.Delete()
+  Game.EnablePlayerControls()
   PlayerPackageQuest.Stop()
+  PlayerPackageQuestHorseAlias.ForceRefTo(None)
+  _horsey.Delete()
 
   _lastWaypoint = None
   _currentWaypoint = None
@@ -145,16 +149,11 @@ function _SetWaypointEnabled(WanderlustWaypoint waypoint, bool isEnabled)
   endIf
 endFunction
 
-function _FixPlayer(Actor player)
-  Debug.Notification("AI is stuck")
+function _TeleportToNextWaypoint()
+  Debug.Notification("AI is stuck, teleporting")
 
-  ; We can't call player.ResetAI(), that crashes the game. Try resetting the AI another way
-  Game.SetPlayerAIDriven(false)
-  PlayerPackageQuest.Stop()
-  Utility.Wait(0.1)
-  PlayerPackageQuest.Start()
-  Game.SetPlayerAIDriven()
-  player.SetPosition(player.GetPositionX(), player.GetPositionY(), player.GetPositionZ() + 5000)
+  _horsey.MoveTo(_currentWaypoint, 0, 0, 5000, false)
+  Game.GetPlayer().MoveTo(_currentWaypoint, 0, 0, 5000, false)
 endFunction
 
 WanderlustWaypoint function _GetClosestWaypoint()
@@ -191,10 +190,9 @@ string function _IntToAlphaChar(int v)
   endIf
 endFunction
 
-float function _SqrDistance(float x1, float y1, float z1, float x2, float y2, float z2)
-  return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1)
+float function _SqrDistanceToObject(ObjectReference obj, float x, float y, float z)
+  float x2 = obj.GetPositionX()
+  float y2 = obj.GetPositionY()
+  float z2 = obj.GetPositionZ()
+  return (x2 - x) * (x2 - x) + (y2 - y) * (y2 - y) + (z2 - z) * (z2 - z)
 endFunction
-
-; float function _SqrDistanceToLastPosition(float x, float y, float z)
-;   return (x - _lastPositionX) * (x - _lastPositionX) + (y - _lastPositionY) * (y - _lastPositionY) + (z - _lastPositionZ) * (z - _lastPositionZ)
-; endFunction
