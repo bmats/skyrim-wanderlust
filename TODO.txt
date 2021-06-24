@@ -1,5 +1,6 @@
-- if the player gets stuck for 10 seconds, teleport to destination
-- get rid of dragons altogether - need a specific save?
+- teleport to desination sometimes glitches horse if it's loading too far away and switches to a loading screen
+- problem position at 100866, -26001, -9429
+- 5000 is too high lolol, make delay time longer before respawning - 10s
 - smooth out camera
 - video stream quality is kinda bad?
 - Fix thieves

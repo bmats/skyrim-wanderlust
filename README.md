@@ -37,6 +37,8 @@ tgm
 tmm 0 # rediscover every location again
 ```
 
+Make sure to load up a save from before the player has picked up the [Dragonstone](https://elderscrolls.fandom.com/wiki/Dragonstone) to disable random dragon attacks. Ideally, this is a clean save where the intro quest is complete and the player is in the open world.
+
 ## Dev environment set up
 
 - VS Code
@@ -46,3 +48,6 @@ tmm 0 # rediscover every location again
 - Detailed Tamriel map: https://srmap.uesp.net/
 - MCM states: http://www.gamesas.com/trying-make-mcm-configeration-menu-t409508.html
 - Creation Kit documentation: https://www.creationkit.com/index.php?title=Quest_Alias_Tab
+
+Tips:
+- You need to reload a save from before you created an object in game if you make changes to an object and want to test the changes in game
