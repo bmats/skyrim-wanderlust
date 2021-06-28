@@ -116,7 +116,7 @@ function OnWaypointTriggerEnter(WanderlustWaypoint waypoint)
     return
   endIf
 
-  Debug.Notification("Reached waypoint")
+  Debug.Notification("Reached waypoint " + Route.Find(_currentWaypoint))
 
   ; Disable AI while we swap waypoints
   PlayerPackageQuest.Stop()

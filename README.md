@@ -15,7 +15,7 @@ Required mods:
 
 Recommended mods:
 - [One With Nature](https://www.nexusmods.com/skyrim/mods/54090): change all animals to not be aggressive
-- [No Random Dragons](https://www.nexusmods.com/skyrim/mods/14519/): disable random dragon spawns
+- ~~[No Random Dragons](https://www.nexusmods.com/skyrim/mods/14519/): disable random dragon spawns~~
 - ~~[Skyrim Unbound](https://www.nexusmods.com/skyrim/mods/71465/): disable all dragon spawn~~
 
 Recommended Skyrim.ini changes (in Documents/My Games/Skyrim):
@@ -23,8 +23,10 @@ Recommended Skyrim.ini changes (in Documents/My Games/Skyrim):
 [General]
 bAlwaysActive=1
 fDefaultFov=80
+uGridsToLoad=8
+uExterior Cell Buffer=81
 [Camera]
-fAutoVanityModeDelay=1000000
+fAutoVanityModeDelay=9999999
 ```
 
 Recommended changes to game settings:
