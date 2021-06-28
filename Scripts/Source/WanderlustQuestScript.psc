@@ -11,6 +11,7 @@ Message property ManualRoutingMessage Auto
 float _kUpdateIntervalSec = 5.0
 float _kPlayerFollowDistance = 1000.0
 float _kStuckDistanceThreshold = 50.0
+float _kTeleportDropHeight = 3000.0
 
 WanderlustWaypoint _lastWaypoint
 WanderlustWaypoint _currentWaypoint
@@ -152,8 +153,8 @@ endFunction
 function _TeleportToNextWaypoint()
   Debug.Notification("AI is stuck, teleporting")
 
-  _horsey.MoveTo(_currentWaypoint, 0, 0, 5000, false)
-  Game.GetPlayer().MoveTo(_currentWaypoint, 0, 0, 5000, false)
+  _horsey.MoveTo(_currentWaypoint, 0, 0, _kTeleportDropHeight, false)
+  Game.GetPlayer().MoveTo(_currentWaypoint, 0, 0, _kTeleportDropHeight, false)
 endFunction
 
 WanderlustWaypoint function _GetClosestWaypoint()
