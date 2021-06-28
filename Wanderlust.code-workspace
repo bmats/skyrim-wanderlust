@@ -6,8 +6,8 @@
         }
     ],
     "settings": {
-        "papyrus.skyrimSpecialEdition.enabled": false,
+        "papyrus.skyrimSpecialEdition.enabled": true,
         "papyrus.fallout4.enabled": false,
-        "papyrus.skyrim.enabled": true,
+        "papyrus.skyrim.enabled": false,
     }
 }
