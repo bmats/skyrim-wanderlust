@@ -8,6 +8,7 @@ ReferenceAlias property PlayerPackageQuestHorseAlias Auto
 ActorBase property HorseActor Auto
 Message property ManualRoutingMessage Auto
 
+bool _kDebug = true
 float _kUpdateIntervalSec = 5.0
 float _kPlayerFollowDistance = 1000.0
 float _kStuckDistanceThreshold = 50.0
@@ -83,7 +84,7 @@ function StartWander()
   Game.ForceThirdPerson()
 
   ; Don't hide geometry in debug mode
-  if !_manualRouting
+  if !_kDebug
     Game.ShowFirstPersonGeometry(false)
     Game.GetPlayer().SetAlpha(0)
   endIf

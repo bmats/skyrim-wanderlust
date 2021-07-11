@@ -51,5 +51,14 @@ Make sure to load up a save from before the player has picked up the [Dragonston
 - MCM states: http://www.gamesas.com/trying-make-mcm-configeration-menu-t409508.html
 - Creation Kit documentation: https://www.creationkit.com/index.php?title=Quest_Alias_Tab
 
+Skyrim.ini changes for logging:
+```
+[Papyrus]
+fPostLoadUpdateTimeMS=500.0
+bEnableLogging=1
+bEnableTrace=1
+bLoadDebugInformation=1
+```
+
 Tips:
 - You need to reload a save from before you created an object in game if you make changes to an object and want to test the changes in game
