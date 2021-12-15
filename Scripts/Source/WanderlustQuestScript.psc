@@ -9,10 +9,10 @@ ActorBase property HorseActor Auto
 Message property ManualRoutingMessage Auto
 
 bool _kDebug = true
-float _kUpdateIntervalSec = 5.0
+float _kUpdateIntervalSec = 10.0
 float _kPlayerFollowDistance = 1000.0
 float _kStuckDistanceThreshold = 50.0
-float _kTeleportDropHeight = 3000.0
+float _kTeleportDropHeight = 0.0
 
 WanderlustWaypoint _lastWaypoint
 WanderlustWaypoint _currentWaypoint
@@ -30,9 +30,18 @@ event OnUpdate()
     return
   endIf
 
+  ; If the horse hasn't moved _kStuckDistanceThreshold since the last update, it's stuck
+  if _SqrDistanceToObject(_horsey, _lastUpdatePosX, _lastUpdatePosY, _lastUpdatePosZ) < (_kStuckDistanceThreshold * _kStuckDistanceThreshold)
+    _FixStuckHorsey()
+  endIf
+
+  _lastUpdatePosX = _horsey.GetPositionX()
+  _lastUpdatePosY = _horsey.GetPositionY()
+  _lastUpdatePosZ = _horsey.GetPositionZ()
+
   ; The player actor needs to stay within range of the horse because the world loads around the player position.
   ; Otherwise, the horse will reach the end of the world.
-  ; Every time the horse moves _kPlayerFollowDistance, move the player there and update the last follow position.
+  ; Every time the horse moves _kPlayerFollowDistance, move the player _kPlayerFollowDistance away, and update the last follow position.
   Actor player = Game.GetPlayer()
   float sqrDistanceFromFollowPos = _SqrDistanceToObject(_horsey, _lastFollowPosX, _lastFollowPosY, _lastFollowPosZ)
   if sqrDistanceFromFollowPos > (_kPlayerFollowDistance * _kPlayerFollowDistance)
@@ -41,15 +50,6 @@ event OnUpdate()
     _lastFollowPosY = _horsey.GetPositionY()
     _lastFollowPosZ = _horsey.GetPositionZ()
   endIf
-
-  if _SqrDistanceToObject(_horsey, _lastUpdatePosX, _lastUpdatePosY, _lastUpdatePosZ) < (_kStuckDistanceThreshold * _kStuckDistanceThreshold)
-    ; Horse is stuck. Just teleport to the next waypoint to fix this
-    _TeleportToNextWaypoint()
-  endIf
-
-  _lastUpdatePosX = _horsey.GetPositionX()
-  _lastUpdatePosY = _horsey.GetPositionY()
-  _lastUpdatePosZ = _horsey.GetPositionZ()
 endEvent
 
 ; Called by WanderlustMenu
@@ -87,6 +87,7 @@ function StartWander()
   if !_kDebug
     Game.ShowFirstPersonGeometry(false)
     Game.GetPlayer().SetAlpha(0)
+    _horsey.SetAlpha(0)
   endIf
 
   RegisterForUpdate(_kUpdateIntervalSec)
@@ -112,12 +113,22 @@ Actor function GetMainActor()
   return _horsey
 endFunction
 
+int function GetCurrentWaypoint()
+  return Route.Find(_currentWaypoint)
+endFunction
+
+int function GetLastWaypoint()
+  return Route.Find(_lastWaypoint)
+endFunction
+
 function OnWaypointTriggerEnter(WanderlustWaypoint waypoint)
   if waypoint != _currentWaypoint
     return
   endIf
 
-  Debug.Notification("Reached waypoint " + Route.Find(_currentWaypoint))
+  if _kDebug
+    Debug.Notification("Reached waypoint " + Route.Find(_currentWaypoint))
+  endIf
 
   ; Disable AI while we swap waypoints
   PlayerPackageQuest.Stop()
@@ -151,11 +162,12 @@ function _SetWaypointEnabled(WanderlustWaypoint waypoint, bool isEnabled)
   endIf
 endFunction
 
-function _TeleportToNextWaypoint()
-  Debug.Notification("AI is stuck, teleporting")
+function _FixStuckHorsey()
+  Debug.Notification("AI is stuck between " + GetLastWaypoint() + " and " + GetCurrentWaypoint())
 
-  _horsey.MoveTo(_currentWaypoint, 0, 0, _kTeleportDropHeight, false)
-  Game.GetPlayer().MoveTo(_currentWaypoint, 0, 0, _kTeleportDropHeight, false)
+  ; The player always follows the horse at a safe distance. Hopefully, the player's position is somewhere where horsey won't be stuck, so teleport there.
+  ; Plus, when the horse teleports there, it'll push the player out of the way. Then, if the horse is stuck again, it'll move to wherever it pushed the player last.
+  _horsey.MoveTo(Game.GetPlayer(), 0, 0, 0, false)
 endFunction
 
 WanderlustWaypoint function _GetClosestWaypoint()

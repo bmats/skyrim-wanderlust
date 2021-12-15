@@ -1,8 +1,4 @@
-- teleport to desination sometimes glitches horse if it's loading too far away and switches to a loading screen
-x 5000 is too high lolol
-- make delay time longer before respawning - 10s
-- problem position at 100866, -26001, -9429 - FortAmol04
-- problem position: 165547, -45431, 2778, go down the hill toward a bend. the player shortcuts up a mountain to skip part of the path
+- disable night cycles being so dark?
 - smooth out camera https://www.nexusmods.com/skyrimspecialedition/mods/41252 https://github.com/mwilsnd/SkyrimSE-SmoothCam
 - video stream quality is kinda bad?
 - Fix thieves

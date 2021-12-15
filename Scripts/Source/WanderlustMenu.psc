@@ -14,7 +14,11 @@ event OnPageReset(string page)
 
   SetCursorPosition(1)
 
+  AddHeaderOption("Debug")
   _manualRoutingOptionId = AddToggleOption("Manual waypoint routing", _manualRouting)
+
+  AddTextOption("Next waypoint: " + MainQuest.GetCurrentWaypoint(), "", OPTION_FLAG_DISABLED)
+  AddTextOption("Previous waypoint: " + MainQuest.GetLastWaypoint(), "", OPTION_FLAG_DISABLED)
 endEvent
 
 event OnOptionSelect(int optionId)
