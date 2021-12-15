@@ -1,7 +1,7 @@
 # Wanderlust
 A bot that explores Tamriel on foot.
 
-Supports: Skyrim LE
+Supports: Skyrim Special Edition
 
 ![Waypoint map](Maps/waypoint-map.jpg)
 
@@ -13,8 +13,13 @@ Required mods:
 - [Skyrim Script Extender (SKSE)](https://www.nexusmods.com/skyrim/mods/100216)
 - [SkyUI](https://www.nexusmods.com/skyrim/mods/3863)
 
-Recommended mods:
-- [One With Nature](https://www.nexusmods.com/skyrim/mods/54090): change all animals to not be aggressive
+Recommended feature mods:
+- [One With Nature](https://www.nexusmods.com/skyrim/mods/54090): in mod settings, change all animals to not be aggressive
+- [Blended Roads Redone SE](https://www.nexusmods.com/skyrimspecialedition/mods/26270): better looking roads
+
+Favorite graphics mods:
+- [Majestic Mountains](https://www.nexusmods.com/skyrimspecialedition/mods/11052)
+
 
 Recommended Skyrim.ini changes (in Documents/My Games/Skyrim):
 ```
@@ -25,11 +30,14 @@ uGridsToLoad=8
 uExterior Cell Buffer=81
 [Camera]
 fAutoVanityModeDelay=9999999
+[Grass]
+fGrassMaxStartFadeDistance=10000.0000
 ```
 
 Recommended changes to game settings:
 - Disable crosshair
 - Dim HUD so it's less distracting
+- Settings > Gameplay > disable Save on Travel
 
 Recommended console cheats:
 ```sh

@@ -9,7 +9,11 @@
             "problemMatcher": [
                 "$PapyrusCompiler"
             ],
-            "label": "pyro: Compile Project (Wanderlust.ppj)"
+            "label": "pyro: Compile Project (Wanderlust.ppj)",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         },
         {
             "label": "Launch Skyrim",

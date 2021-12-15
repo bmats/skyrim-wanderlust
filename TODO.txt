@@ -1,5 +1,6 @@
-- disable night cycles being so dark?
+- Disable thieves/revelers
+- waypoint 1 forces you to turn around going from 2? or something is blocking the path?
 - smooth out camera https://www.nexusmods.com/skyrimspecialedition/mods/41252 https://github.com/mwilsnd/SkyrimSE-SmoothCam
+- Make night less dark
 - video stream quality is kinda bad?
-- Fix thieves
 - in production version, set walking speed to slower
